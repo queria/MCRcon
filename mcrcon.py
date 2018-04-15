@@ -40,6 +40,7 @@ class MCRcon(object):
 
     def __enter__(self):
         self.connect()
+        return self
 
     def __exit__(self, type, value, tb):
         self.disconnect()
@@ -59,7 +60,7 @@ class MCRcon(object):
             self.socket = ctx.wrap_socket(self.socket, server_hostname=self.host)
 
         self.socket.connect((self.host, self.port))
-        self.send(3, self.password)
+        self._send(3, self.password)
 
     def disconnect(self):
         if self.socket is not None:
