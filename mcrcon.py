@@ -108,3 +108,23 @@ class MCRcon(object):
         result = self._send(2, command)
         time.sleep(0.003) # MC-72390 workaround
         return result
+
+try:
+    if __name__ == '__main__':
+        import argparse
+        parser = argparse.ArgumentParser(description='connect to and use Minecraft Server remote console protocol')
+        parser.add_argument('host', metavar='HOST', help='the host to connect to')
+        parser.add_argument('password', metavar='PASSWORD', help='the password to connect with')
+        parser.add_argument('-p', '--port', metavar='PORT', dest='port', type=int, default=25575, help='the port to connect to')
+        parser.add_argument('-t', '--tls', dest='tlsmode', action='store_true', help='connect to the server with tls encryption')
+        args = parser.parse_args()
+
+        with MCRcon(args.host, args.password, args.port, args.tlsmode) as mcr:
+            while True:
+                cmd = input('> ')
+                if cmd == 'exit':
+                    break
+                else:
+                    resp = mcr.command(cmd)
+                    print(resp)
+except KeyboardInterrupt: pass
