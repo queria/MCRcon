@@ -119,12 +119,23 @@ try:
         parser.add_argument('-t', '--tls', dest='tlsmode', action='store_true', help='connect to the server with tls encryption')
         args = parser.parse_args()
 
-        with MCRcon(args.host, args.password, args.port, args.tlsmode) as mcr:
-            while True:
-                cmd = input('> ')
-                if cmd == 'exit':
-                    break
-                else:
-                    resp = mcr.command(cmd)
-                    print(resp)
+        try:
+            with MCRcon(args.host, args.password, args.port, args.tlsmode) as mcr:
+                while True:
+                    cmd = input('> ')
+                    if cmd == 'exit':
+                        break
+                    else:
+                        try:
+                            resp = mcr.command(cmd)
+                            print(resp)
+                        except (ConnectionResetError, ConnectionAbortedError):
+                            print('The connection was terminated, the server may could have been stopped.')
+                            break
+                        if cmd == 'stop':
+                            break
+        except ConnectionRefusedError:
+            print('The connection could not be made as the server actively refused it.')
+        except ConnectionError as e:
+            print(e)
 except KeyboardInterrupt: pass
