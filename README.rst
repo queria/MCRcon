@@ -40,21 +40,21 @@ manually, and ideally disconnect::
 Command Line Usage
 ##################
 
+After installing the package a cli will be included that can be used.
+
+Help can be gotten by doing::
+
+    mcrcon --help
+
 You can connect from the console with commands like the following::
 
-    python -m mcrcon 10.1.1.1 sekret
+    mcrcon 10.1.1.1
 
-The output from `python -m mcrcon --help` is provided here::
+You will either be prompted for your password, or you can set it as follows
+as an environment variable::
 
-    usage: mcrcon.py [-h] [-p PORT] [-t] HOST PASSWORD
-    
-    connect to and use Minecraft Server remote console protocol
-    
-    positional arguments:
-      HOST                  the host to connect to
-      PASSWORD              the password to connect with
-    
-    optional arguments:
-      -h, --help            show this help message and exit
-      -p PORT, --port PORT  the port to connect to
-      -t, --tls             connect to the server with tls encryption
+    export RCON_PASSWORD=sekret
+
+And then you can run commands on the server interactively::
+
+    > /whitelist add bob
