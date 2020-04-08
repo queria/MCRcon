@@ -7,7 +7,7 @@ with open("README.rst") as file:
 
 setup(
     name="mcrcon",
-    version="0.5.2",
+    version="0.6.0",
     description="A client for handling Remote Commands (RCON) to a "
     "Minecraft server.",
     long_description=long_description,
