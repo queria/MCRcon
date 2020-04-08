@@ -36,3 +36,25 @@ manually, and ideally disconnect::
     In [5]: resp = mcr.command("/whitelist add bob")
     In [6]: print(resp)
     In [7]: mcr.disconnect()
+
+Command Line Usage
+##################
+
+After installing the package a cli will be included that can be used.
+
+Help can be gotten by doing::
+
+    mcrcon --help
+
+You can connect from the console with commands like the following::
+
+    mcrcon 10.1.1.1
+
+You will either be prompted for your password, or you can set it as follows
+as an environment variable::
+
+    export RCON_PASSWORD=sekret
+
+And then you can run commands on the server interactively::
+
+    > /whitelist add bob
