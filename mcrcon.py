@@ -6,7 +6,9 @@ import ssl
 import select
 import struct
 import time
-import signal
+import platform
+if platform.system() != "Windows":
+    import signal
 
 
 class MCRconException(Exception):
@@ -47,7 +49,8 @@ class MCRcon(object):
         self.port = port
         self.tlsmode = tlsmode
         self.timeout = timeout
-        signal.signal(signal.SIGALRM, timeout_handler)
+        if platform.system() != "Windows":
+            signal.signal(signal.SIGALRM, timeout_handler)
 
     def __enter__(self):
         self.connect()
@@ -79,11 +82,13 @@ class MCRcon(object):
             self.socket = None
 
     def _read(self, length):
-        signal.alarm(self.timeout)
+        if platform.system() != "Windows":
+            signal.alarm(self.timeout)
         data = b""
         while len(data) < length:
             data += self.socket.recv(length - len(data))
-        signal.alarm(0)
+        if platform.system() != "Windows":
+            signal.alarm(0)
         return data
 
     def _send(self, out_type, out_data):
