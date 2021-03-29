@@ -49,14 +49,12 @@ class MCRcon(object):
         self.timeout = timeout
         signal.signal(signal.SIGALRM, timeout_handler)
 
-
     def __enter__(self):
         self.connect()
         return self
 
     def __exit__(self, type, value, tb):
         self.disconnect()
-
 
     def connect(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
