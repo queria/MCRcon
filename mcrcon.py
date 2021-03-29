@@ -6,10 +6,15 @@ import ssl
 import select
 import struct
 import time
+import signal
 
 
 class MCRconException(Exception):
     pass
+
+
+def timeout_handler(signum, frame):
+    raise MCRconException("Connection timeout error")
 
 
 class MCRcon(object):
@@ -36,11 +41,14 @@ class MCRcon(object):
 
     socket = None
 
-    def __init__(self, host, password, port=25575, tlsmode=0):
+    def __init__(self, host, password, port=25575, tlsmode=0, timeout=2):
         self.host = host
         self.password = password
         self.port = port
         self.tlsmode = tlsmode
+        self.timeout = timeout
+        signal.signal(signal.SIGALRM, timeout_handler)
+
 
     def __enter__(self):
         self.connect()
@@ -48,6 +56,7 @@ class MCRcon(object):
 
     def __exit__(self, type, value, tb):
         self.disconnect()
+
 
     def connect(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -72,9 +81,11 @@ class MCRcon(object):
             self.socket = None
 
     def _read(self, length):
+        signal.alarm(self.timeout)
         data = b""
         while len(data) < length:
             data += self.socket.recv(length - len(data))
+        signal.alarm(0)
         return data
 
     def _send(self, out_type, out_data):
