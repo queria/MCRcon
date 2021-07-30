@@ -7,6 +7,7 @@ import select
 import struct
 import time
 import platform
+
 if platform.system() != "Windows":
     import signal
 
@@ -43,7 +44,7 @@ class MCRcon(object):
 
     socket = None
 
-    def __init__(self, host, password, port=25575, tlsmode=0, timeout=2):
+    def __init__(self, host, password, port=25575, tlsmode=0, timeout=5):
         self.host = host
         self.password = password
         self.port = port
