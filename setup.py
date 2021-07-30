@@ -20,10 +20,9 @@ setup(
         "Intended Audience :: Developers",
         "Intended Audience :: System Administrators",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
     ],
-    keywords="openstack keystone users tasks registration workflow",
+    keywords="minecraft mcrcon rcon remote command mojang cli",
     py_modules=["mcrcon"],
     entry_points={"console_scripts": ["mcrcon=mcrcon:mcrcon_cli"]},
 )
