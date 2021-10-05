@@ -8,16 +8,9 @@ import struct
 import time
 import platform
 
-if platform.system() != "Windows":
-    import signal
-
 
 class MCRconException(Exception):
     pass
-
-
-def timeout_handler(signum, frame):
-    raise MCRconException("Connection timeout error")
 
 
 class MCRcon(object):
@@ -50,8 +43,6 @@ class MCRcon(object):
         self.port = port
         self.tlsmode = tlsmode
         self.timeout = timeout
-        if platform.system() != "Windows":
-            signal.signal(signal.SIGALRM, timeout_handler)
 
     def __enter__(self):
         self.connect()
@@ -83,13 +74,13 @@ class MCRcon(object):
             self.socket = None
 
     def _read(self, length):
-        if platform.system() != "Windows":
-            signal.alarm(self.timeout)
+        deadline = time.time() + self.timeout
         data = b""
         while len(data) < length:
+            if time.time() >= deadline:
+                raise MCRconException("Connection timeout error")
+            self.socket.settimeout(deadline - time.time())
             data += self.socket.recv(length - len(data))
-        if platform.system() != "Windows":
-            signal.alarm(0)
         return data
 
     def _send(self, out_type, out_data):
