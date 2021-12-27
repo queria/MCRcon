@@ -162,12 +162,21 @@ def mcrcon_cli():
             with MCRcon(args.host, password, args.port, args.tlsmode) as mcr:
                 while True:
                     cmd = input("> ")
-                    if cmd.strip() == "exit":
+                    cmd = cmd.strip()
+                    if cmd == "exit":
                         break
                     else:
                         try:
                             resp = mcr.command(cmd)
-                            print(resp)
+                            if cmd == 'help':
+                                # help returns all commands on single line
+                                # for better readability replace slash '/'
+                                # with newline
+                                resp = resp.split('/')
+                                resp = sorted(resp)
+                                print('\n'.join(resp))
+                            else:
+                                print(resp)
                         except (ConnectionResetError, ConnectionAbortedError):
                             print(
                                 "The connection was terminated, the server may have been stopped."
