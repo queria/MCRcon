@@ -161,8 +161,12 @@ def mcrcon_cli():
         try:
             with MCRcon(args.host, password, args.port, args.tlsmode) as mcr:
                 while True:
-                    cmd = input("> ")
-                    cmd = cmd.strip()
+                    try:
+                        cmd = input("> ")
+                        cmd = cmd.strip()
+                    except EOFError:
+                        # Quit as EOF (e.g. Ctrl+D) means no more commands
+                        cmd = 'exit'
                     if cmd == "exit":
                         break
                     else:
